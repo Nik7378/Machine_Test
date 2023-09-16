@@ -11,6 +11,8 @@ import com.it.entity.Product;
 
 public interface CategoryRepo extends CrudRepository<Category, Integer> {
 	
+//	List<Category> findAll();
+	
 	Page<Category> findAll(Pageable pageable);
 
 }

@@ -12,4 +12,11 @@ public class GlobalExceptionHandler {
 		ErrorInfo info = new ErrorInfo(HttpStatus.BAD_GATEWAY.toString(),"Invalid Name Entered by user");
 		return info;
 	}
+	
+	@ExceptionHandler(value = ResourceNotFoundException.class)
+	public ErrorInfo InvalidResourceExc() {
+		ErrorInfo info = new ErrorInfo(HttpStatus.BAD_GATEWAY.toString(),"No category found");
+		return info;
+	}
+
 }

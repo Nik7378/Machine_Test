@@ -2,12 +2,20 @@ package com.it.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 @Table(name = "product")
@@ -24,7 +32,12 @@ public class Product {
 	@NotNull(message = "Name cannot be null")
 	@Size(min = 3, max = 100, message = "Name should be between 3 to 100 characters") //Name should be between min 3 and max 15 characters
 	private String name;
-	
+
+//	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property = "id")
+	@ManyToOne(fetch = FetchType.EAGER )
+	@JsonIgnoreProperties(value = {"product", "handler","hibernateLazyInitializer"}, allowSetters = true)
+	@JoinColumn(name = "category_id")
+	private Category category;
 	
 	@Column(name = "price")
 	@Positive(message = "Invalid Price")	//id should not be zero or negative
@@ -41,9 +54,7 @@ public class Product {
 	private String description;
 
 	
-	public Product() {
-		// TODO Auto-generated constructor stub
-	}
+	public Product() {}
 
 	public Product(int id, String name, double price, int quantity, String description) {
 		super();
@@ -92,5 +103,13 @@ public class Product {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	
+	public Category getCategory() {
+		return category;
+	}
+
+	public void setCategory(Category category) {
+		this.category = category;
 	}
 }

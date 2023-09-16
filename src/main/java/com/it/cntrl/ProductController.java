@@ -28,22 +28,22 @@ import com.it.service.ProductService;
 
 @RestController
 @CrossOrigin(origins="http://localhost:8080")
-public class Controller {
-	
+public class ProductController {
+	 
 	@Autowired //searches for the object of ProductService and inject into service variable
 	private ProductService service;
 	
-	@Autowired //searches for the object of CategoryService and inject into service variable
-	private CategoryService cat_service;
 	
+	//----------------------------Product_APIs--------------------------------
 
-	@PostMapping("api/products")
-	public String addProduct(@RequestBody @Valid Product e) {
+	
+	@PostMapping("api/products/{category_id}")
+	public String addProduct(@RequestBody @Valid Product e, @PathVariable int category_id) {
 		if(e.getName().contains(" ")) {
-			throw new InvalidNameException(); //if name contains any spaace then it will throw InvalidNameException
+			throw new InvalidNameException(); //if name contains any space then it will throw InvalidNameException
 		}
 		else {
-			service.add(e);
+			service.add(e, category_id);
 			return "Data Added";
 		}
 	}
@@ -60,9 +60,9 @@ public class Controller {
 //	}
 	
 	@GetMapping("api/products")
-	public List<Product> allProduct(@RequestParam(defaultValue = "1") int page,
+	public Page<Product> allProduct(@RequestParam(defaultValue = "1") int page,
 	                                @RequestParam(defaultValue = "2") int sizePerPage){
-//	    Pageable pageable = PageRequest.of(page, sizePerPage);
+	    Pageable pageable = PageRequest.of(page, sizePerPage);
 	    return service.findAllRecords(page, sizePerPage);
 	}
 
@@ -75,45 +75,6 @@ public class Controller {
 	@DeleteMapping("api/products/{id}")
 	public String deleteProduct(@PathVariable("id") int id) {
 		service.deleteRecordById(id);
-		return "Data Deleted";
-	}
-	
-	//----------------------------category--------------------------------
-	
-	@PostMapping("api/categories")
-	public String addCategory(@RequestBody @Valid Category e) {
-		if(e.getName().contains(" ")) {
-			throw new InvalidNameException(); //if name contains any spaace then it will throw InvalidNameException
-		}
-		else {
-			cat_service.add(e);
-			return "Data Added";
-		}
-	}
-	
-	@GetMapping("api/categories/{id}")
-	public Category getCategoryById(@PathVariable int id){
-		Category e = cat_service.getById(id);
-		return e;
-	}
-
-	@GetMapping("api/categories")
-	public List<Category> allCategory(@RequestParam(defaultValue = "1") int page,
-	                                @RequestParam(defaultValue = "2") int sizePerPage){
-//	    Pageable pageable = PageRequest.of(page, sizePerPage);
-	    return cat_service.findAllRecords(page, sizePerPage);
-	}
-
-	
-	@PutMapping("api/categories")
-	public String updateCategory(@RequestBody Category e) {
-		cat_service.update(e);
-		return "Data Updated";
-	}
-	
-	@DeleteMapping("api/categories/{id}")
-	public String deleteCategory(@PathVariable("id") int id) {
-		cat_service.deleteRecordById(id);
 		return "Data Deleted";
 	}	
 }

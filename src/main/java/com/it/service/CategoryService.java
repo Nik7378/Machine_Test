@@ -3,6 +3,7 @@ package com.it.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
@@ -22,9 +23,14 @@ public class CategoryService {
 		return e;
 	}
 	
-	public List<Category> findAllRecords(int page, int sizePerPage){
+//	public List<Category> findAllRecords(){
+//		List<Category> list = repo.findAll();
+//		return list;
+//	}
+
+	public Page<Category> findAllRecords(int page, int sizePerPage){
 		Pageable pageable = PageRequest.of(page, sizePerPage);
-		List<Category> list = repo.findAll(pageable);
+		Page<Category> list = repo.findAll(pageable);
 		return list;
 	}
 	
